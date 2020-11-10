@@ -1,6 +1,6 @@
 var DEFAULT_PORT = 5000
 var DEFAULT_HOST = '127.0.0.1'
-var SERVER_NAME = 'healthrecords'
+var SERVER_NAME = 'Patient Data REST API'
 
 var http = require ('http');
 var mongoose = require ("mongoose");
@@ -62,8 +62,8 @@ var restify = require('restify')
   server.listen(port, ipaddress, function () {
   console.log('Server %s listening at %s', server.name, server.url)
   console.log('Resources:')
-  console.log(' /patient')
-  console.log(' /patient/:id')
+  console.log(' /patients')
+  console.log(' /patients/:id')
 })
 
 
