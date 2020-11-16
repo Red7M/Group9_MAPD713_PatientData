@@ -28,6 +28,8 @@ db.once('open', function() {
 
 // This is the schema.  Note the types, validation and trim
 // statements.  They enforce useful constraints on the data.
+
+// Patient Schema
 var patientSchema = new mongoose.Schema({
 		first_name: String, 
 		last_name: String, 
@@ -36,10 +38,22 @@ var patientSchema = new mongoose.Schema({
 		department: String,
 		doctor: String
 });
+// Records Schema
+var recordSchema = new mongoose.Schema({
+  _id: String,
+  date: String,
+  nurse_name: String,
+  type: String,
+  category: String,
+  diastolic: String,
+  systolic: String
+});
 
 // Compiles the schema into a model, opening (or creating, if
-// nonexistent) the 'Patients' collection in the MongoDB database
+// nonexistent) the 'Patients' and 'Record' collection 
+// in the MongoDB database
 var Patient = mongoose.model('Patient', patientSchema);
+var Record = mongoose.model('Record', recordSchema);
 
 var errors = require('restify-errors');
 var restify = require('restify')
@@ -64,6 +78,7 @@ var restify = require('restify')
   console.log('Resources:')
   console.log(' /patients')
   console.log(' /patients/:id')
+  console.log(' /patients/:id/records')
 })
 
 
@@ -132,6 +147,46 @@ var restify = require('restify')
       if (error) return next(new Error(JSON.stringify(error.errors)))
       // Send the patient if no issues
       res.send(201, result)
+    })
+  })
+
+  // Create a new record for an existing patient
+  server.post('/patients/:id/records', function(req, res, next) {
+    console.log('POST request: patients records params=>' + JSON.stringify(req.params));
+    console.log('POST request: patients records body=>' + JSON.stringify(req.body));
+
+    // Creating new record for existing patient
+    var patientRecords = new Record({
+      _id: req.params.id,
+      date: req.body.date,
+      nurse_name: req.body.nurse_name,
+      type: req.body.type,
+      category: req.body.category,
+      diastolic: req.body.diastolic,
+      systolic: req.body.systolic
+    });
+
+    // Create patient record and save to db
+    patientRecords.save(function (error, result) {
+      // If there are any errors, pass them to next in the correct format
+      if (error) return next(new Error(JSON.stringify(error.errors)))
+      // Send the patient if no issues
+      res.send(201, result)
+    })
+  })
+
+   // Get existing patient records by their patient id
+   server.get('/patients/:id/records', function (req, res, next) {
+    console.log('GET request: patients/' + req.params.id + '/records');
+    // Find a single patient records by their id
+    Record.find({_id: req.params.id}).exec(function (error, records) {
+      if (records) {
+        // Send records with no issues
+        res.send(records)
+      } else {
+        // Send 404 header if the record doesn't exist
+        res.send(404)
+      }
     })
   })
 

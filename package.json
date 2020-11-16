@@ -1,14 +1,14 @@
 {
-  "name": "rest-mongoose-sample",
+  "name": "group9.mapd713.patient.data.milestone3",
   "version": "3.0.0",
-  "description": "MongoDB with Mongoose on Node.js example",
+  "description": "project implements all use-cases (get/post patient/record, and get all patients/records), and back-end server for android mobile app",
   "main": "index.js",
   "engines": {
     "node": ">=4.1.1",
     "npm": ">=2.1.x"
   },
   "authors": [
-    "zvbox"
+    "Reda Mehali ID: 301159604"
   ],
   "license": "MIT",
   "dependencies": {
